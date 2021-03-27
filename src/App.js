@@ -1,47 +1,25 @@
 import React from 'react';
 
 class App extends React.Component{
-  constructor(){
-    super();
-    console.log("hello");
-  }
   state = {
-    count: 0
+    isLoading: true,
+    movies: []
   };
-
-  add = () =>{
-    // console.log("add");
-    this.setState(current => ({count: current.count + 1}));
-  };
-
-  minus = () => {
-    // console.log("minus");
-    this.setState(current => ({count: current.count - 1}));
-  };
-
   componentDidMount(){
-    console.log("component rendering");
-  };
-
-  componentDidUpdate(){
-    console.log("I just Updated");
-  };
-  
-  componentWillUnmount(){
-    console.log("Goodbye, cruel world");
+    setTimeout(() => {
+      this.setState({isLoading: false})
+    }, 6000);
   }
-
+  
   render(){
-    console.log("I'm rendering");
+    const { isLoading } = this.state;
     return (
-      <div>
-        <h1>The number is: {this.state.count}</h1>
-        <button onClick={this.add}>Add</button>
-        <button onClick={this.minus}>Minus</button>
-        </div>
+      <div>{isLoading ? "Loading...": "We are ready"}</div> 
     )
   }
   
 }
 
 export default App;
+
+// 삼항연산자 해석: 만약 isLoading이 true이면 "Loading"을 보여줘, 이게 true가 아니라면 "We are ready"를 보여줄꺼야
