@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from "axios";
+import Movie from "./Movie";
 
 class App extends React.Component{
   state = {
@@ -7,7 +8,12 @@ class App extends React.Component{
     movies: []
   };
   getMovies = async () => {
-    const movies = await axios.get("https://yts-proxy.now.sh/list_movies.json");
+    const {data: {
+       data :{movies}
+      }
+    } = await axios.get("https://yts-proxy.now.sh/list_movies.json?sort_by=rating");
+    // console.log(movies);
+    this.setState({ movies, isLoading: false });
   }
 
   componentDidMount(){
@@ -15,12 +21,24 @@ class App extends React.Component{
   }
   
   render(){
-    const { isLoading } = this.state;
+    const { isLoading, movies } = this.state;
     return (
-      <div>{isLoading ? "Loading...": "We are ready"}</div> 
-    )
+      <div>
+        {isLoading 
+        ? "Loading..." 
+      : movies.map(movie => (
+        <Movie 
+        key={movie.id}
+        id={movie.id}
+        year={movie.year}
+        title={movie.title} 
+        summary={movie.summary} 
+        poster={movie.medium_cover_image}
+        />
+      ))}
+      </div> 
+    );
   }
-  
 }
 
 export default App;
@@ -32,3 +50,4 @@ export default App;
 // 만약 우리가 async/await을 안해주면 javascript는 function을 기다려주지 않고 실행해버릴꺼야
 // 그리고 비동기 처리를 하기 위해 더 많은 코드가 필요한 다른 일을 해야 할꺼야
 // 그래서 우리는 접근이 끝날 때까지 기다려줘야해
+// 우리는 API로 부터 데이터를 가져오고 있고, state를 사용해서 isLoading을 보여주고 있다.
